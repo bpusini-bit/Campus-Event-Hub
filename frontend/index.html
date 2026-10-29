@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Campus Event Hub — discover and manage campus events.">
+  <title>Campus Event Hub</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Campus Event Hub home"><span class="brand-mark">C</span><span>Campus<span class="brand-light">Hub</span></span></a>
+    <nav class="nav">
+      <a href="#events">Explore events</a>
+      <a href="#my-events" id="myEventsLink" hidden>My registrations</a>
+      <a href="#organizer" id="organizerLink" hidden>Organizer</a>
+    </nav>
+    <div class="nav-actions" id="authActions">
+      <button class="btn btn-quiet" id="loginOpen">Log in</button>
+      <button class="btn btn-primary" id="signupOpen">Create account</button>
+    </div>
+    <div class="nav-actions" id="userActions" hidden>
+      <span class="user-chip" id="userLabel"></span>
+      <button class="btn btn-quiet" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse"></span> YOUR CAMPUS, YOUR COMMUNITY</span>
+        <h1>Make room for<br><span>something memorable.</span></h1>
+        <p>Discover workshops, fests, talks, and campus meetups. Find your people and save your spot.</p>
+        <a class="btn btn-primary btn-large" href="#events">Explore events <span aria-hidden="true">↗</span></a>
+        <div class="hero-proof"><div class="avatar-stack"><i>A</i><i>S</i><i>R</i><i>+</i></div><span>Made for campus life</span></div>
+      </div>
+      <div class="hero-art" aria-label="Decorative event illustration">
+        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+        <div class="art-card art-card-back"><span>✦</span><b>IDEAS</b><small>meet people</small></div>
+        <div class="art-card art-card-front"><div class="ticket-top"><span>✳ CAMPUS LIVE</span><span>NO. 024</span></div><div class="ticket-graphic">✺</div><h3>Make it<br>happen.</h3><div class="ticket-bottom"><span>LEARN · CREATE · CONNECT</span><span>↗</span></div></div>
+        <span class="floating-note note-one">✦ Learn something new</span><span class="floating-note note-two">◉ Meet your community</span>
+      </div>
+    </section>
+
+    <section class="stats-strip">
+      <div><strong>Discover</strong><span>what's happening</span></div><div><strong>Register</strong><span>in a few clicks</span></div><div><strong>Connect</strong><span>with your campus</span></div>
+    </section>
+
+    <section class="section" id="events">
+      <div class="section-heading">
+        <div><span class="eyebrow">THE CAMPUS CALENDAR</span><h2>Find your next <span>thing.</span></h2><p class="muted">Good things happen when you show up.</p></div>
+        <button class="btn btn-outline" id="refreshBtn">↻ Refresh events</button>
+      </div>
+      <div class="filters">
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search events, places, or keywords" aria-label="Search events"></label>
+        <select id="categoryFilter" aria-label="Filter by category"><option value="">All categories</option><option>Workshop</option><option>Technical</option><option>Cultural</option><option>Sports</option><option>Talk</option><option>Other</option></select>
+        <select id="sortFilter" aria-label="Sort events"><option value="soon">Soonest first</option><option value="new">Recently added</option></select>
+      </div>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <div id="eventsGrid" class="events-grid"><div class="loading-card">Loading campus events…</div></div>
+    </section>
+
+    <section class="section my-section" id="my-events" hidden>
+      <div class="section-heading"><div><span class="eyebrow">YOUR PLANS</span><h2>My <span>registrations.</span></h2></div></div>
+      <div id="registrationsList" class="registration-list"></div>
+    </section>
+
+    <section class="section organizer-section" id="organizer" hidden>
+      <div class="section-heading"><div><span class="eyebrow">HOST SOMETHING GREAT</span><h2>Organizer <span>studio.</span></h2><p class="muted">Create and manage events for your campus community.</p></div></div>
+      <div class="organizer-layout">
+        <form id="eventForm" class="panel form-panel">
+          <div class="panel-title"><h3 id="eventFormTitle">Create an event</h3><span class="tag">ORGANIZER</span></div>
+          <input type="hidden" id="eventId">
+          <label>Event title<input id="eventTitle" maxlength="120" required placeholder="e.g. Design Thinking Workshop"></label>
+          <div class="form-row"><label>Category<select id="eventCategory" required><option>Workshop</option><option>Technical</option><option>Cultural</option><option>Sports</option><option>Talk</option><option>Other</option></select></label><label>Capacity<input id="eventCapacity" type="number" min="1" max="10000" required value="100"></label></div>
+          <label>Description<textarea id="eventDescription" rows="4" maxlength="3000" required placeholder="What will attendees experience?"></textarea></label>
+          <div class="form-row"><label>Date and time<input id="eventDate" type="datetime-local" required></label><label>Venue<input id="eventVenue" maxlength="160" required placeholder="Auditorium / Lab 2"></label></div>
+          <div class="form-actions"><button class="btn btn-primary" type="submit" id="saveEventBtn">Publish event</button><button class="btn btn-quiet" type="button" id="cancelEditBtn" hidden>Cancel edit</button></div>
+          <p class="form-hint">Only organizer accounts can publish and manage events.</p>
+        </form>
+        <div class="panel manage-panel"><div class="panel-title"><h3>Your events</h3><span id="manageCount" class="count-pill">0</span></div><div id="managedEvents" class="managed-events"><p class="muted">Your published events will appear here.</p></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="/"><span class="brand-mark">C</span><span>Campus<span class="brand-light">Hub</span></span></a><span>Built for ideas, people, and campus life.</span><span>Campus Event Hub · Student project</span></footer>
+
+  <div class="modal-backdrop" id="authModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close dialog">×</button>
+      <div class="modal-logo">C</div><span class="eyebrow">WELCOME TO CAMPUSHUB</span><h2 id="authTitle">Welcome back.</h2><p id="authSubtitle" class="muted">Log in to register for campus events.</p>
+      <div class="auth-tabs"><button id="loginTab" class="active" type="button">Log in</button><button id="signupTab" type="button">Create account</button></div>
+      <form id="authForm">
+        <label id="nameField" hidden>Full name<input id="fullName" maxlength="100" autocomplete="name" placeholder="Your name"></label>
+        <label>Email address<input id="email" type="email" autocomplete="email" required placeholder="you@college.edu"></label>
+        <label>Password<input id="password" type="password" minlength="8" autocomplete="current-password" required placeholder="At least 8 characters"></label>
+        <p id="authMessage" class="inline-message" role="status" hidden></p>
+        <button class="btn btn-primary btn-full" id="authSubmit" type="submit">Log in</button>
+      </form>
+      <p class="fine-print">Demo note: account creation uses your Supabase project's authentication service.</p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="detailModal" hidden>
+    <section class="modal detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <button class="modal-close" id="detailClose" aria-label="Close dialog">×</button><div id="detailContent"></div>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
